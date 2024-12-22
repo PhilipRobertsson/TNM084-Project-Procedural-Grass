@@ -141,4 +141,5 @@ MonoBehaviour:
   meshCollider: {fileID: 6133056462915616486}
   mapScale: 10
   heightMultiplier: 2
-  grassTexture: {fileID: 2800000, guid: 193628a798f033d4cb129509ca12b86d, type: 3}
+  toggleGrassTexture: 1
+  grassTexture: {fileID: 2800000, guid: 07ecc9ff47c78d94991ab42b8769c11b, type: 3}

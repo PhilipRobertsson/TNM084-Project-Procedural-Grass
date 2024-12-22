@@ -22,6 +22,9 @@ public class TileGeneration : MonoBehaviour
     private float heightMultiplier;
 
     [SerializeField]
+    private bool toggleGrassTexture;
+
+    [SerializeField]
     private Texture2D grassTexture;
 
     private void UpdateMeshVertices(float[,] heightMap){
@@ -75,10 +78,21 @@ public class TileGeneration : MonoBehaviour
         UpdateMeshVertices(heightMap);
     }
 
-    private Texture2D BuildTexture(float[,] heightMap)
-    {
-        int tileDepth = heightMap.GetLength(0);
-        int tileWidth = heightMap.GetLength(1);
+    private Texture2D BuildTexture(float[,] heightMap){
+        int tileDepth = 0;
+        int tileWidth = 0;
+        Texture2D tileTexture = null;
+
+        if (!toggleGrassTexture){
+            tileDepth = heightMap.GetLength(0);
+            tileWidth = heightMap.GetLength(1);
+            tileTexture = new Texture2D(tileWidth, tileDepth);
+        }
+        else{
+            tileDepth = grassTexture.height;
+            tileWidth = grassTexture.width;
+            tileTexture = grassTexture;
+        }
 
         Color[] colorMap = new Color[tileDepth * tileWidth];
         for (int zIndex = 0; zIndex < tileDepth; zIndex++)
@@ -87,16 +101,19 @@ public class TileGeneration : MonoBehaviour
             {
                 // transform the 2D map index is an Array index
                 int colorIndex = zIndex * tileWidth + xIndex;
-                float height = heightMap[zIndex, xIndex];
-                // assign as color a shade of grey proportional to the height value
-                colorMap[colorIndex] = Color.Lerp(Color.black, Color.white, height);
-
+                if (!toggleGrassTexture)
+                {
+                    float height = heightMap[zIndex, xIndex];
+                    // assign as color a shade of grey proportional to the height value
+                    colorMap[colorIndex] = Color.Lerp(Color.black, Color.white, height);
+                }else{
+                    colorMap[colorIndex] = tileTexture.GetPixel(xIndex, zIndex);
+                }
             }
         }
-        //Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
-        Texture2D tileTexture = TGALoader.LoadTGA(AssetDatabase.GetAssetPath(grassTexture));
+
         tileTexture.wrapMode = TextureWrapMode.Clamp;
-        //tileTexture.SetPixels(colorMap);
+        tileTexture.SetPixels(colorMap);
         tileTexture.Apply();
         return tileTexture;
     }
