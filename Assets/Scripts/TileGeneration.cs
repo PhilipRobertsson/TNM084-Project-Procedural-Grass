@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 
 public class TileGeneration : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class TileGeneration : MonoBehaviour
 
     [SerializeField]
     private float heightMultiplier;
+
+    [SerializeField]
+    private Texture2D grassTexture;
 
     private void UpdateMeshVertices(float[,] heightMap){
         int tileDepth = heightMap.GetLength(0);
@@ -89,9 +93,10 @@ public class TileGeneration : MonoBehaviour
 
             }
         }
-        Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
+        //Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
+        Texture2D tileTexture = TGALoader.LoadTGA(AssetDatabase.GetAssetPath(grassTexture));
         tileTexture.wrapMode = TextureWrapMode.Clamp;
-        tileTexture.SetPixels(colorMap);
+        //tileTexture.SetPixels(colorMap);
         tileTexture.Apply();
         return tileTexture;
     }
