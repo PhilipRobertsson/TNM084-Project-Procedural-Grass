@@ -15,6 +15,10 @@ Shader "Custom/TerrainShader" {
     }
 
     CGINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadow.hlsl"
+
         float _TessellationEdgeLength;
         float _DisplacementStrength;
 
@@ -27,13 +31,13 @@ Shader "Custom/TerrainShader" {
         };
 
         float TessellationHeuristic(float3 cp0, float3 cp1) {
-            //return 1.0f;
             float edgeLength = distance(cp0, cp1);
             float3 edgeCenter = (cp0 + cp1) * 0.5;
             float viewDistance = distance(edgeCenter, _WorldSpaceCameraPos);
 
             return edgeLength * _ScreenParams.y / (_TessellationEdgeLength * (viewDistance * 0.5));
         }
+
         bool TriangleIsBelowClipPlane(float3 p0, float3 p1, float3 p2, int planeIndex, float bias) {
             float4 plane = unity_CameraWorldClipPlanes[planeIndex];
 
@@ -49,19 +53,24 @@ Shader "Custom/TerrainShader" {
     ENDCG
 
     SubShader {
+
         Pass {
             Tags {
-                "LightMode" = "ForwardBase"
+                "LightMode" = "UniversalForward"
             }
 
             CGPROGRAM
             
             #pragma target 5.0
 
-            #define SHADOWS_SCREEN
+            //#define SHADOWS_SCREEN
             
-            #include "UnityPBSLighting.cginc"
-            #include "AutoLight.cginc"
+            //#include "UnityPBSLighting.cginc"
+            //#include "AutoLight.cginc"
+
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadow.hlsl"
             
             #pragma vertex dummyvp
             #pragma hull hp
@@ -233,8 +242,9 @@ Shader "Custom/TerrainShader" {
             
             #pragma target 5.0
 
-            #include "UnityStandardBRDF.cginc"
-			#include "UnityStandardUtils.cginc"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadow.hlsl"
 
             #pragma vertex dummyvp
             #pragma hull hp
