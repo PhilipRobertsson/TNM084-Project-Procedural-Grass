@@ -14,10 +14,10 @@ Shader "Custom/TerrainShader" {
         _NormalStrength ("Normals Strength", Range(0.0, 10)) = 1
     }
 
-    CGINCLUDE
+    HLSLINCLUDE
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
         #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadow.hlsl"
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
         float _TessellationEdgeLength;
         float _DisplacementStrength;
@@ -50,7 +50,7 @@ Shader "Custom/TerrainShader" {
                    TriangleIsBelowClipPlane(p0, p1, p2, 2, bias) ||
                    TriangleIsBelowClipPlane(p0, p1, p2, 3, -_DisplacementStrength);
         }
-    ENDCG
+    ENDHLSL
 
     SubShader {
 
@@ -70,7 +70,7 @@ Shader "Custom/TerrainShader" {
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadow.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
             
             #pragma vertex dummyvp
             #pragma hull hp
@@ -244,7 +244,7 @@ Shader "Custom/TerrainShader" {
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadow.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
             #pragma vertex dummyvp
             #pragma hull hp
