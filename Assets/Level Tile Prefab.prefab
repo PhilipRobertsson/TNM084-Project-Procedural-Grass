@@ -139,7 +139,7 @@ MonoBehaviour:
   tileRenderer: {fileID: 7329825929712002551}
   meshFilter: {fileID: 4318806610355697441}
   meshCollider: {fileID: 6133056462915616486}
-  mapScale: 10
-  heightMultiplier: 2
+  mapScale: 20
+  heightMultiplier: 4
   toggleGrassTexture: 1
   grassTexture: {fileID: 2800000, guid: 07ecc9ff47c78d94991ab42b8769c11b, type: 3}

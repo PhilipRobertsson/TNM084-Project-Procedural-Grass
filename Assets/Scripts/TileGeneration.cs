@@ -27,6 +27,8 @@ public class TileGeneration : MonoBehaviour
     [SerializeField]
     private Texture2D grassTexture;
 
+    float[,] heightMap;
+
     private void UpdateMeshVertices(float[,] heightMap){
         int tileDepth = heightMap.GetLength(0);
         int tileWidth = heightMap.GetLength(1);
@@ -70,7 +72,7 @@ public class TileGeneration : MonoBehaviour
         float offsetZ = -this.gameObject.transform.position.z;
 
         // calculate the offsets based on the tile position
-        float[,] heightMap = this.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, this.mapScale, offsetX, offsetZ);
+        heightMap = this.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, this.mapScale, offsetX, offsetZ);
 
         // generate a heightMap using noise
         Texture2D tileTexture = BuildTexture(heightMap);

@@ -4,7 +4,7 @@
     {
         // Here we define the properties of the shader example texture or color
         _BaseColor ("Base Colour", Color) = (1,1,1,1)
-        _TipColor ( "Tip Colour", Color) = (1,1,1,1))
+        _TipColor ( "Tip Colour", Color) = (1,1,1,1)
         _BladeTexture("Blade Texture", 2D) = "white" {}
 
         // Definerar gräsblads egenskaper
@@ -100,15 +100,15 @@
                 float2 uv : TEXCOORD0;
             };
 
-            VertexOutput vert(Vertex Input v){
+            VertexOutput vert(VertexInput v){
 
                 VertexOutput o;
                 // Here we transform the vertex from object space to clip space
                 o.vertex = TransformObjectToHClip(v.vertex.xyz);
                 o.normal = v.normal;
-                o.TANGENT = v.tangent;
+                o.tangent = v.tangent;
                 o.uv = TRANSFORM_TEX(v.uv, _GrassMap);
-                return 0;
+                return o;
             }
         ENDHLSL
 
