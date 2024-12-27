@@ -53,7 +53,7 @@
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
 
-
+            //Cbuffer is declared to store the data that is passed from the CPU to the GPU
             CBUFFER_START(UnityPerMaterial)
 
 	            float4 _TipColor;
@@ -100,8 +100,15 @@
                 float2 uv : TEXCOORD0;
             };
 
+            struct GeomData{
+                float4 pos: SV_POSITION;
+                float2 uv: TEXCOORD0;
+                float3 worldPos : TEXCOORD1;
+            }
+
             VertexOutput vert(VertexInput v){
 
+                // transforms the vertex from object space to world space
                 VertexOutput o;
                 // Here we transform the vertex from object space to clip space
                 o.vertex = TransformObjectToHClip(v.vertex.xyz);
@@ -110,6 +117,49 @@
                 o.uv = TRANSFORM_TEX(v.uv, _GrassMap);
                 return o;
             }
+
+            //used for bending the grass
+            GeomData TransformGeomToClip(float3 pos, float3 offset, float3x3 transformationMatrix, float2 uv){
+                GeomData o;
+
+                // transforming the vertex from object space to clip space
+                o.pos = TransformObjectToHClip(pos + mul(transformationMatrix, offset));
+                o.uv = uv;
+                o.worldPos = TransformObjectToWorld(pos + mul(transformationMatrix, offset));
+            }
+
+            [maxvertexcount(3)]
+            void geom(point VertexOutput input [1], inout TriangleStream<geometryOutput> triStream){
+                float3 pos = input[0].vertex.xyz;
+                float3 normal = input[0].normal;
+                float3 tangent = input[0].tangent;
+
+                float3x3 transformationMatrix = float3x3( 1, 0, 0,
+                                                          0, 1, 0,
+                                                          0, 0, 1 );
+
+                // appends the vertices to the triangle stream
+                triStream.Append(TransformGeomToClip(pos, float3(-0.1f, 0.0f, 0.0f), transformationMatrix, float2(0.0f, 0.0f)));
+                triStream.Append(TransformGeomToClip(pos, float3( 0.1f, 0.0f, 0.0f), transformationMatrix, float2(1.0f, 0.0f)));
+                triStream.Append(TransformGeomToClip(pos, float3( 0.0f, 0.5f, 0.0f), transformationMatrix, float2(0.5f, 1.0f)));
+
+                triStream.RestartStrip(); //not really needed 
+            }
+
+            //transforms the vertex from object space to world space
+            VertexOutput geomVert(VertexInput v){
+
+                // transforms the vertex from object space to world space
+                VertexOutput o;
+                // Here we transform the vertex from object space to clip space
+                o.vertex = float4(TransformObjectToWord(v.vertex.xyz), 1.0f);
+                o.normal = TransformObjectToWorldNormal(v.normal);
+                o.tangent = v.tangent;
+                o.uv = TRANSFORM_TEX(v.uv, _GrassMap);
+                return o;
+            }
+
+
         ENDHLSL
 
     Pass{
@@ -119,8 +169,12 @@
         Tags { "LightMode" = "UniversialForward" }
 
         HLSLPROGRAM
-            #pragma vertex vert
+            #pragma require geometry
+
+
+            #pragma vertex geomVert
             #pragma fragment frag
+            #pragma geometry geom
 
             float4 frag(VertexOutput i) : SV_Target{
                 return float4(1.0f, 1.0f, 1.0f, 1.0f);
