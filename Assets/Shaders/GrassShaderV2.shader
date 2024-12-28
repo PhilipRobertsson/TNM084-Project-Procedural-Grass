@@ -199,62 +199,64 @@ Shader "Custom/GrassShaderV2"
 			{
 				float grassVisibility = tex2Dlod(_GrassMap, float4(input[0].uv, 0, 0)).r;
 
-				if (grassVisibility >= _GrassThreshold)
+				if (grassVisibility < _GrassThreshold) return;
+				
+				float3 pos = input[0].vertex.xyz;
+
+
+				float3 normal = input[0].normal;
+				float4 tangent = input[0].tangent;
+				float3 bitangent = cross(normal, tangent.xyz) * tangent.w;
+
+				float3x3 tangentToLocal = float3x3
+				(
+					tangent.x, bitangent.x, normal.x,
+					tangent.y, bitangent.y, normal.y,
+					tangent.z, bitangent.z, normal.z
+				);
+
+				tangentToLocal *= _scale; 
+
+				// Rotate around the y-axis a random amount.
+				float3x3 randRotMatrix = angleAxis3x3(rand(pos) * UNITY_TWO_PI, float3(0, 0, 1.0f));
+
+				// Rotate around the bottom of the blade a random amount.
+				float3x3 randBendMatrix = angleAxis3x3(rand(pos.zzx) * _BendDelta * UNITY_PI * 0.5f, float3(-1.0f, 0, 0));
+
+				//scroll the wind map
+				float2 windUV = pos.xz * _WindMap_ST.xy + _WindMap_ST.zw + normalize(_WindVelocity.xzy) * _WindFrequency * _Time.y;
+				float2 windSample = (tex2Dlod(_WindMap, float4(windUV, 0, 0)).xy * 2 - 1) * length(_WindVelocity);
+
+				float3 windAxis = normalize(float3(windSample.x, windSample.y, 0));
+				float3x3 windMatrix = angleAxis3x3(UNITY_PI * windSample, windAxis);
+
+				// Transform the grass blades to the correct tangent space.
+				float3x3 baseTransformationMatrix = mul(tangentToLocal, randRotMatrix);
+				float3x3 tipTransformationMatrix = _scale * mul(mul(mul(tangentToLocal, windMatrix), randBendMatrix), randRotMatrix);
+
+				float falloff = smoothstep(_GrassThreshold, _GrassThreshold + _GrassFalloff, grassVisibility);
+
+				float width  = lerp(_BladeWidthMin, _BladeWidthMax, rand(pos.xzy) * falloff);
+				float height = lerp(_BladeHeightMin, _BladeHeightMax, rand(pos.zyx) * falloff);
+				float forward = rand(pos.yyy) * _BladeBendDistance;
+
+				// Create blade segments by adding two vertices at once.
+				for (int i = 0; i < BLADE_SEGMENTS; ++i)
 				{
-					float3 pos = input[0].vertex.xyz;
+					float t = i / (float)BLADE_SEGMENTS;
+					float3 offset = float3(width * (1 - t), pow(t, _BladeBendCurve) * forward, height * t);
 
-					float3 normal = input[0].normal;
-					float4 tangent = input[0].tangent;
-					float3 bitangent = cross(normal, tangent.yyz) * tangent.w;
+					float3x3 transformationMatrix = (i == 0) ? baseTransformationMatrix : tipTransformationMatrix;
 
-					float3x3 tangentToLocal = float3x3
-					(
-						tangent.x, bitangent.x, normal.x,
-						tangent.y, bitangent.y, normal.y,
-						tangent.z, bitangent.z, normal.z
-					);
-
-					tangentToLocal *= _scale; 
-
-					// Rotate around the y-axis a random amount.
-					float3x3 randRotMatrix = angleAxis3x3(rand(pos) * UNITY_TWO_PI, float3(1.0f, 0.0f, 0.0f));
-
-					// Rotate around the bottom of the blade a random amount.
-					float3x3 randBendMatrix = angleAxis3x3(rand(pos.zzx) * _BendDelta * UNITY_PI * 0.5f, float3(-1.0f, 0, 0));
-
-					float2 windUV = pos.xz * _WindMap_ST.xy + _WindMap_ST.zw + normalize(_WindVelocity.xzy) * _WindFrequency * _Time.y;
-					float2 windSample = (tex2Dlod(_WindMap, float4(windUV, 0, 0)).xy * 2 - 1) * length(_WindVelocity);
-
-					float3 windAxis = normalize(float3(windSample.x, windSample.y, 0));
-					float3x3 windMatrix = angleAxis3x3(UNITY_PI * windSample, windAxis);
-
-					// Transform the grass blades to the correct tangent space.
-					float3x3 baseTransformationMatrix = mul(tangentToLocal, randRotMatrix);
-					float3x3 tipTransformationMatrix = mul(mul(mul(tangentToLocal, windMatrix), randBendMatrix), randRotMatrix);
-
-					float falloff = smoothstep(_GrassThreshold, _GrassThreshold + _GrassFalloff, grassVisibility);
-
-					float width  = lerp(_BladeWidthMin, _BladeWidthMax, rand(pos.xzy) * falloff);
-					float height = lerp(_BladeHeightMin, _BladeHeightMax, rand(pos.zyx) * falloff);
-					float forward = rand(pos.yyz) * _BladeBendDistance;
-
-					// Create blade segments by adding two vertices at once except for the Tip vertex.
-					for (int i = 0; i < BLADE_SEGMENTS; ++i)
-					{
-						float t = i / (float)BLADE_SEGMENTS;
-						float3 offset = float3(width * (1 - t), pow(t, _BladeBendCurve) * forward, height * t);
-
-						float3x3 transformationMatrix = (i == 0) ? baseTransformationMatrix : tipTransformationMatrix;
-
-						triStream.Append(TransformGeomToClip(pos, float3( offset.x, offset.y, offset.z), transformationMatrix, float2(0, t)));
-						triStream.Append(TransformGeomToClip(pos, float3( -offset.x, offset.y, offset.z), transformationMatrix, float2(1, t)));
-					}
+					triStream.Append(TransformGeomToClip(pos, float3( offset.x, offset.y, offset.z), transformationMatrix, float2(0, t)));
+					triStream.Append(TransformGeomToClip(pos, float3(-offset.x, offset.y, offset.z), transformationMatrix, float2(1, t)));
+				}
 
 					// Add the final vertex at the tip of the grass blade.
-					triStream.Append(TransformGeomToClip(pos, float3(0, forward, height), tipTransformationMatrix, float2(0.5, 1)));
+				triStream.Append(TransformGeomToClip(pos, float3(0, forward, height), tipTransformationMatrix, float2(0.5, 1)));
 
-					triStream.RestartStrip();
-				}
+				triStream.RestartStrip();
+				
 			}
 		ENDHLSL
 
