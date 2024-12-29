@@ -34,27 +34,27 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _WindMap:
         m_Texture: {fileID: 2800000, guid: 0be064912be54c34c9b1ab8a8de7e507, type: 3}
-        m_Scale: {x: 0.3, y: 0.3}
+        m_Scale: {x: 0.1, y: 0.1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BendDelta: 0.626
-    - _BladeBendCurve: 2.39
+    - _BendDelta: 0.807
+    - _BladeBendCurve: 2.76
     - _BladeBendDistance: 0.38
-    - _BladeHeightMax: 1.535
+    - _BladeHeightMax: 1.678
     - _BladeHeightMin: 0.172
-    - _BladeSegments: 3.52
+    - _BladeSegments: 4.07
     - _BladeWidthMax: 0.1
-    - _BladeWidthMin: 0.0363
+    - _BladeWidthMin: 0.0316
     - _GrassFalloff: 0
     - _GrassThreshold: -0.1
     - _TessellationGrassDistance: 0.01
-    - _WindFrequency: 0.015
-    - _scale: 0.314
+    - _WindFrequency: 0.1
+    - _scale: 0.32
     m_Colors:
     - _BaseColor: {r: 0.2653783, g: 0.3584906, b: 0, a: 1}
     - _TipColor: {r: 1, g: 0.9838644, b: 0.51257855, a: 1}
-    - _WindVelocity: {r: 0.25, g: 0, b: 0, a: 0}
+    - _WindVelocity: {r: 0.2, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2492295035358369746
