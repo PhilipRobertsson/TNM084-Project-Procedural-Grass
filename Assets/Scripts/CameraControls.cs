@@ -5,6 +5,7 @@ public class CameraControls : MonoBehaviour
 
     private void Update()
     {
+        
         // ----------------------------Horizontal Movement----------------------------
 
         // Vector to store movement
@@ -21,8 +22,12 @@ public class CameraControls : MonoBehaviour
 
         float moveSpeedHorizontal = 10f;
 
-        // Apply movement to camera
         transform.position += moveHorizontalDir * moveSpeedHorizontal * Time.deltaTime;
+
+
+
+        // Apply movement to camera
+
 
         // ----------------------------Vertical Movement----------------------------
 
