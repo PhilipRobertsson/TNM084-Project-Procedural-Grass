@@ -43,14 +43,14 @@ Material:
     - _BladeBendDistance: 0.38
     - _BladeHeightMax: 1.678
     - _BladeHeightMin: 0.172
-    - _BladeSegments: 4.07
+    - _BladeSegments: 4
     - _BladeWidthMax: 0.1
     - _BladeWidthMin: 0.0316
     - _GrassFalloff: 0
     - _GrassThreshold: -0.1
     - _TessellationGrassDistance: 0.01
     - _WindFrequency: 0.1
-    - _scale: 0.32
+    - _scale: 0.31
     m_Colors:
     - _BaseColor: {r: 0.2653783, g: 0.3584906, b: 0, a: 1}
     - _TipColor: {r: 1, g: 0.9838644, b: 0.51257855, a: 1}
