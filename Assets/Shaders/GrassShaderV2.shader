@@ -69,6 +69,7 @@ Shader "Custom/GrassShaderV2"
 				float _BladeWidthMax;
 				float _BladeHeightMin;
 				float _BladeHeightMax;
+				float _BladeSegments;
 
 				float _BladeBendDistance;
 				float _BladeBendCurve;
@@ -109,18 +110,19 @@ Shader "Custom/GrassShaderV2"
 				float2 uv      : TEXCOORD0;
 			};
 
-			struct TessellationFactors
-			{
-				float edge[3] : SV_TessFactor;
-				float inside  : SV_InsideTessFactor;
-			};
-
 			struct GeomData
 			{
 				float4 pos : SV_POSITION;
 				float2 uv  : TEXCOORD0;
 				float3 worldPos : TEXCOORD1;
 			};
+
+			struct TessellationFactors
+			{
+				float edge[3] : SV_TessFactor;
+				float inside  : SV_InsideTessFactor;
+			};
+
 
 			// Simple noise function, from http://answers.unity.com/answers/624136/view.html
             // We should probably change this to one made by Stegu eller iaf keijiro
@@ -164,7 +166,8 @@ Shader "Custom/GrassShaderV2"
 
 
 			// Vertex shader which translates from object to world space.
-			VertexOutput geomVert (VertexInput v)
+			
+			VertexOutput geomVert(VertexInput v)
             {
 				VertexOutput o; 
 				o.vertex = v.vertex;
@@ -173,6 +176,77 @@ Shader "Custom/GrassShaderV2"
 				o.uv = TRANSFORM_TEX(v.uv, _GrassMap);
                 return o;
             }
+
+
+			VertexOutput tessVert(VertexInput v)
+			{
+				VertexOutput o;
+				o.vertex = v.vertex;
+				o.normal = v.normal;
+				o.tangent = v.tangent;
+				o.uv = v.uv;
+
+				return o;
+			}
+
+			// tessellation functions derived from Catlike Coding's tutorial:
+			// https://catlikecoding.com/unity/tutorials/advanced-rendering/tessellation/
+
+			//finds the distance between two vertices to determine the tessellation factor
+			float tessellationEdgeFactor(VertexInput vert0, VertexInput vert1)
+			{
+				float3 v0 = vert0.vertex.xyz;
+				float3 v1 = vert1.vertex.xyz;
+				float edgeLength = distance(v0, v1);
+				//_TessellationGrassDistance makes it independent of the scale of the object
+				return (edgeLength / _TessellationGrassDistance);
+			}
+
+
+			//decides how new vertices are created on the plane
+			TessellationFactors patchConstantFunc(InputPatch<VertexInput, 3> patch)
+			{
+				TessellationFactors f;
+
+				f.edge[0] = tessellationEdgeFactor(patch[1], patch[2]);
+				f.edge[1] = tessellationEdgeFactor(patch[2], patch[0]);
+				f.edge[2] = tessellationEdgeFactor(patch[0], patch[1]);
+
+				//average of the three edges is used to determine the inside tessellation factor
+				f.inside = (f.edge[0] + f.edge[1] + f.edge[2]) / 3.0f;
+
+				return f;
+			} 
+
+			[domain("tri")]
+			[outputcontrolpoints(3)]
+			[outputtopology("triangle_cw")]
+			[partitioning("integer")]
+			[patchconstantfunc("patchConstantFunc")]
+			VertexInput hull(InputPatch<VertexInput, 3> patch, uint pointId : SV_OutputControlPointID)
+			{
+				return patch[pointId];
+			}
+
+			[domain("tri")]
+			VertexOutput domain(TessellationFactors f, OutputPatch<VertexInput, 3> patch, float3 barycentricCoordinates : SV_DomainLocation)
+			{
+				VertexInput i;
+
+				//interpolating the old verticies to the new ones aka weighted average
+				#define INTERPOLATE(fieldname) i.fieldname = \
+					patch[0].fieldname * barycentricCoordinates.x + \
+					patch[1].fieldname * barycentricCoordinates.y + \
+					patch[2].fieldname * barycentricCoordinates.z;
+
+					INTERPOLATE(vertex)
+					INTERPOLATE(normal)
+					INTERPOLATE(tangent)
+					INTERPOLATE(uv)
+
+					return tessVert(i);
+				
+			}
 
 			// Geometry functions derived from Roystan's tutorial:
 			// https://roystan.net/articles/grass-shader.html
@@ -236,15 +310,15 @@ Shader "Custom/GrassShaderV2"
 
 				float falloff = smoothstep(_GrassThreshold, _GrassThreshold + _GrassFalloff, grassVisibility);
 
-				float width  = lerp(_BladeWidthMin, _BladeWidthMax, rand(pos.xzy) * falloff);
+				float width  = lerp(_BladeWidthMin, _BladeWidthMax , rand(pos.xzy) * falloff);
 				float height = lerp(_BladeHeightMin, _BladeHeightMax, rand(pos.zyx) * falloff);
-				float forward = rand(pos.yyy) * _BladeBendDistance;
+				float forward = rand(pos.yyz) * _BladeBendDistance;
 
 				// Create blade segments by adding two vertices at once.
-				for (int i = 0; i < BLADE_SEGMENTS; ++i)
+				for (int i = 0; i < _BladeSegments; ++i)
 				{
 					float t = i / (float)BLADE_SEGMENTS;
-					float3 offset = float3(width * (1 - t), pow(t, _BladeBendCurve) * forward, height * t);
+					float3 offset = float3(width * (1 - t), pow(abs(t), _BladeBendCurve) * forward, height * t);
 
 					float3x3 transformationMatrix = (i == 0) ? baseTransformationMatrix : tipTransformationMatrix;
 
@@ -265,14 +339,19 @@ Shader "Custom/GrassShaderV2"
         {
 			Name "GrassPass"
 			Tags { "LightMode" = "UniversalForward" }
+			ZWrite On
+			ZTest LEqual
 
             HLSLPROGRAM
 			#pragma require geometry
+			#pragma require tessellation tessHW
 
 			//#pragma vertex vert
 			#pragma vertex geomVert
 			#pragma geometry geom
             #pragma fragment frag
+			#pragma hull hull
+			#pragma domain domain
 
 			// The lighting sections of the frag shader taken from this helpful post by Ben Golus:
 			// https://forum.unity.com/threads/water-shader-graph-transparency-and-shadows-universal-render-pipeline-order.748142/#post-5518747
@@ -280,7 +359,7 @@ Shader "Custom/GrassShaderV2"
             {
 				float4 color = tex2D(_BladeTexture, i.uv);
 
-			#ifdef _MAIN_LIGHT_SHADOWS
+			#if defined(_MAIN_LIGHT_SHADOWS) || defined(_MAIN_LIGHT_SHADOWS_CASCADE)
 				VertexPositionInputs vertexInput = (VertexPositionInputs)0;
 				vertexInput.positionWS = i.worldPos;
 
@@ -293,6 +372,36 @@ Shader "Custom/GrassShaderV2"
 				//apply the base and tip color to the grass blade
                 return color * lerp(_BaseColor, _TipColor, i.uv.y);
 			}
+
+			ENDHLSL
+		}
+		Pass
+		{
+			Name "ShadowCaster"
+			Tags { "LightMode" = "ShadowCaster" }
+
+			ZWrite On
+			ZTest LEqual
+
+			HLSLPROGRAM
+				#pragma vertex geomVert
+				#pragma geometry geom
+				#pragma fragment frag
+				#pragma hull hull
+				#pragma domain domain
+				#pragma target 4.6
+				#pragma multi_compile_shadowcaster
+
+
+				GeomData frag(GeomData i) : SV_Target
+				{
+					GeomData o;
+					o.pos = i.pos;
+					o.uv = i.uv;
+					o.worldPos = i.worldPos;
+					return i;
+				}
+				
 
 			ENDHLSL
 		}
