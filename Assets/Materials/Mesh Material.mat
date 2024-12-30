@@ -11,8 +11,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: a1828d6652f66304e92cb2cec0833ff8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _RIPPLE
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -124,7 +123,7 @@ Material:
     - _Parallax: 0.005
     - _QueueControl: 1
     - _QueueOffset: 0
-    - _RIPPLE: 1
+    - _RIPPLE: 0
     - _ReceiveShadows: 1
     - _Ripple_Amplitude: 0.1
     - _Ripple_Period: 2
