@@ -15,6 +15,7 @@ public class ProceduralMesh : MonoBehaviour{
         MeshJob<PointyHexagonGrid, SingleStream>.ScheduleParallel,
         MeshJob<FlatHexagonGrid, SingleStream>.ScheduleParallel,
         MeshJob<CubeSphere, SingleStream>.ScheduleParallel,
+        MeshJob<SharedCubeSphere, PositionStream>.ScheduleParallel,
         MeshJob<UVSphere, SingleStream>.ScheduleParallel
     };
     [SerializeField]
@@ -24,7 +25,7 @@ public class ProceduralMesh : MonoBehaviour{
     MaterialMode material;
 
     public enum MeshType{
-        SquareGrid, SharedSquareGrid, SharedTriangleGrid, PointyHexagonGrid, FlatHexagonGrid, CubeSphere, UVSphere
+        SquareGrid, SharedSquareGrid, SharedTriangleGrid, PointyHexagonGrid, FlatHexagonGrid, CubeSphere, SharedCubeSphere, UVSphere
     };
 
     [SerializeField]
@@ -44,10 +45,14 @@ public class ProceduralMesh : MonoBehaviour{
     GizmoMode gizmos;
 
     [System.Flags]
-    public enum GizmoMode { Nothing = 0, Vertices = 1, Normals = 0b10, Tangents = 0b100 }
+    public enum GizmoMode { Nothing = 0, Vertices = 1, Normals = 0b10, Tangents = 0b100, Triangles = 0b1000 }
 
+    [System.NonSerialized]
     Vector3[] vertices, normals;
+    [System.NonSerialized]
     Vector4[] tangents;
+    [System.NonSerialized]
+    int[] triangles;
     void Update()
     {
         GenerateMesh();
@@ -56,6 +61,7 @@ public class ProceduralMesh : MonoBehaviour{
         vertices = null;
         normals = null;
         tangents = null;
+        triangles = null;
 
         GetComponent<MeshRenderer>().material = materials[(int)material];
     }
@@ -67,15 +73,25 @@ public class ProceduralMesh : MonoBehaviour{
         bool drawVertices = (gizmos & GizmoMode.Vertices) != 0;
         bool drawNormals = (gizmos & GizmoMode.Normals) != 0;
         bool drawTangents = (gizmos & GizmoMode.Tangents) != 0;
+        bool drawTriangles = (gizmos & GizmoMode.Triangles) != 0;
 
         if (vertices == null){
             vertices = mesh.vertices;
         }
         if (drawNormals && normals == null){
-            normals = mesh.normals;
+            drawNormals = mesh.HasVertexAttribute(VertexAttribute.Normal);
+            if (drawNormals){
+                normals = mesh.normals;
+            }
         }
         if (drawTangents && tangents == null){
-            tangents = mesh.tangents;
+            drawTangents = mesh.HasVertexAttribute(VertexAttribute.Tangent);
+            if (drawTangents){
+                tangents = mesh.tangents;
+            }
+        }
+        if (drawTriangles && triangles == null){
+            triangles = mesh.triangles;
         }
 
         Transform t = transform;
@@ -94,10 +110,34 @@ public class ProceduralMesh : MonoBehaviour{
                 Gizmos.DrawRay(position, t.TransformDirection(tangents[i]) * 0.2f);
             }
         }
+        if (drawTriangles){
+            float colorStep = 1f / (triangles.Length - 3);
+            for (int i = 0; i < triangles.Length; i += 3){
+                float c = i * colorStep;
+                Gizmos.color = new Color(c, 0f, c);
+                Gizmos.DrawSphere(
+                    t.TransformPoint((
+                        vertices[triangles[i]] +
+                        vertices[triangles[i + 1]] +
+                        vertices[triangles[i + 2]]
+                    ) * (1f / 3f)),
+                    0.02f
+                );
+            }
+        }
     }
 
     [SerializeField, Range(1, 50)]
     int resolution = 1;
+
+    [System.Flags]
+    public enum MeshOptimizationMode
+    {
+        Nothing = 0, ReorderIndices = 1, ReorderVertices = 0b10
+    }
+
+    [SerializeField]
+    MeshOptimizationMode meshOptimization;
 
     void GenerateMesh(){
         Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
@@ -106,5 +146,13 @@ public class ProceduralMesh : MonoBehaviour{
         jobs[(int)meshType](mesh, meshData, resolution, default).Complete();
 
         Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh);
+
+        if (meshOptimization == MeshOptimizationMode.ReorderIndices){
+            mesh.OptimizeIndexBuffers();
+        }else if (meshOptimization == MeshOptimizationMode.ReorderVertices){
+            mesh.OptimizeReorderVertexBuffer();
+        }else if (meshOptimization != MeshOptimizationMode.Nothing){
+            mesh.Optimize();
+        }
     }
 }
