@@ -150,8 +150,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a515dba7423424ebf3446aa2161787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  meshType: 2
-  resolution: 1
+  materials:
+  - {fileID: 2100000, guid: 276973ae34aaea44a93437bdd01e891b, type: 2}
+  - {fileID: 2100000, guid: 457f2cd57395c7f4abe8f34e7113b4f7, type: 2}
+  - {fileID: 2100000, guid: b6bbcc539ce2b6d4d9968fea210393c6, type: 2}
+  - {fileID: 2100000, guid: 6522646c95a8cf34d8abcc0fda41a65e, type: 2}
+  material: 0
+  meshType: 5
+  gizmos: -1
+  resolution: 12
 --- !u!23 &717858144
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -174,8 +181,7 @@ MeshRenderer:
   m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 276973ae34aaea44a93437bdd01e891b, type: 2}
+  m_Materials: []
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

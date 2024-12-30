@@ -16,6 +16,11 @@ public class ProceduralMesh : MonoBehaviour{
         MeshJob<FlatHexagonGrid, SingleStream>.ScheduleParallel,
         MeshJob<UVSphere, SingleStream>.ScheduleParallel
     };
+    [SerializeField]
+    Material[] materials;
+    public enum MaterialMode { Flat, Ripple, LatLonMap, CubeMap }
+    [SerializeField]
+    MaterialMode material;
 
     public enum MeshType{
         SquareGrid, SharedSquareGrid, SharedTriangleGrid, PointyHexagonGrid, FlatHexagonGrid, UVSphere
@@ -50,6 +55,8 @@ public class ProceduralMesh : MonoBehaviour{
         vertices = null;
         normals = null;
         tangents = null;
+
+        GetComponent<MeshRenderer>().material = materials[(int)material];
     }
 
     void OnDrawGizmos(){
