@@ -110,11 +110,11 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _BendDelta: 1
-    - _BladeBendCurve: 1.73
+    - _BendDelta: 0.267
+    - _BladeBendCurve: 3.15
     - _BladeBendDistance: 0.2
-    - _BladeHeightMax: 1.135
-    - _BladeHeightMin: 0.408
+    - _BladeHeightMax: 1.09
+    - _BladeHeightMin: 0.28
     - _BladeSegments: 3
     - _BladeWidthMax: 0.1
     - _BladeWidthMin: 0.0685
@@ -133,8 +133,8 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _GrassFalloff: 0.027
-    - _GrassThreshold: 0.211
+    - _GrassFalloff: 0.052
+    - _GrassThreshold: 0.193
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -146,17 +146,17 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TessellationGrassDistance: 0.09
+    - _TessellationGrassDistance: 0.11
     - _WindFrequency: 0.01
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _scale: 0.9
+    - _scale: 1.03
     m_Colors:
-    - _BaseColor: {r: 0, g: 0.4339623, b: 0.0033903304, a: 1}
+    - _BaseColor: {r: 0, g: 0.06918234, b: 0, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _TipColor: {r: 0.7473696, g: 1, b: 0.27358478, a: 1}
+    - _TipColor: {r: 0, g: 0.4716981, b: 0, a: 1}
     - _WindVelocity: {r: 0.2, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

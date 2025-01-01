@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Grass
+  m_Name: Grass LOD2
   m_Shader: {fileID: 4800000, guid: 29a139d1a29af2f4b86006881a78e08a, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -43,12 +43,12 @@ Material:
     - _BladeBendDistance: 0.38
     - _BladeHeightMax: 1.678
     - _BladeHeightMin: 0.172
-    - _BladeSegments: 4
+    - _BladeSegments: 1
     - _BladeWidthMax: 0.1
     - _BladeWidthMin: 0.0316
     - _GrassFalloff: 0
     - _GrassThreshold: -0.1
-    - _TessellationGrassDistance: 0.01
+    - _TessellationGrassDistance: 0.51
     - _WindFrequency: 0.05
     - _scale: 0.31
     m_Colors:
