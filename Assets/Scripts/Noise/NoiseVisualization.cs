@@ -38,6 +38,34 @@ public class NoiseVisualization : Visualization {
             Job<Lattice3D<LatticeNormal, Turbulence<Value>>>.ScheduleParallel,
             Job<Lattice3D<LatticeTiling, Turbulence<Value>>>.ScheduleParallel,
         },{
+            Job<Simplex1D<Simplex>>.ScheduleParallel,
+            Job<Simplex1D<Simplex>>.ScheduleParallel,
+            Job<Simplex2D<Simplex>>.ScheduleParallel,
+            Job<Simplex2D<Simplex>>.ScheduleParallel,
+            Job<Simplex3D<Simplex>>.ScheduleParallel,
+            Job<Simplex3D<Simplex>>.ScheduleParallel
+        },{
+            Job<Simplex1D<Turbulence<Simplex>>>.ScheduleParallel,
+            Job<Simplex1D<Turbulence<Simplex>>>.ScheduleParallel,
+            Job<Simplex2D<Turbulence<Simplex>>>.ScheduleParallel,
+            Job<Simplex2D<Turbulence<Simplex>>>.ScheduleParallel,
+            Job<Simplex3D<Turbulence<Simplex>>>.ScheduleParallel,
+            Job<Simplex3D<Turbulence<Simplex>>>.ScheduleParallel
+        },{
+            Job<Simplex1D<Value>>.ScheduleParallel,
+            Job<Simplex1D<Value>>.ScheduleParallel,
+            Job<Simplex2D<Value>>.ScheduleParallel,
+            Job<Simplex2D<Value>>.ScheduleParallel,
+            Job<Simplex3D<Value>>.ScheduleParallel,
+            Job<Simplex3D<Value>>.ScheduleParallel
+        },{
+            Job<Simplex1D<Turbulence<Value>>>.ScheduleParallel,
+            Job<Simplex1D<Turbulence<Value>>>.ScheduleParallel,
+            Job<Simplex2D<Turbulence<Value>>>.ScheduleParallel,
+            Job<Simplex2D<Turbulence<Value>>>.ScheduleParallel,
+            Job<Simplex3D<Turbulence<Value>>>.ScheduleParallel,
+            Job<Simplex3D<Turbulence<Value>>>.ScheduleParallel
+        },{
            Job<Voronoi1D<LatticeNormal, Worley, F1>>.ScheduleParallel,
             Job<Voronoi1D<LatticeTiling, Worley, F1>>.ScheduleParallel,
             Job<Voronoi2D<LatticeNormal, Worley, F1>>.ScheduleParallel,
@@ -82,9 +110,9 @@ public class NoiseVisualization : Visualization {
         }
     };
     public enum NoiseType { 
-        Perlin, PerlinTurbulence, Value,
-        ValueTurbulence, VoronoiWorleyF1,
-        VoronoiWorleyF2, VoronoiWorleyF2MinusF1,
+        Perlin, PerlinTurbulence, Value, ValueTurbulence,
+        Simplex, SimplexTurbulence, SimplexValue, SimplexValueTurbulence,
+        VoronoiWorleyF1, VoronoiWorleyF2, VoronoiWorleyF2MinusF1,
         VoronoiChebyshevF1, VoronoiChebyshevF2, VoronoiChebyshevF2MinusF1
     }
 
