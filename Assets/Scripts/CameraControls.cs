@@ -2,6 +2,12 @@ using UnityEngine;
 
 public class CameraControls : MonoBehaviour
 {
+    public float moveSpeedHorizontal = 5f;
+
+    public float moveSpeedVertical = 5f;
+
+    public float rotateSpeed = 100f;
+
 
     private void Update()
     {
@@ -20,14 +26,8 @@ public class CameraControls : MonoBehaviour
         // Make sure W is always forward no matter the orientation
         Vector3 moveHorizontalDir = transform.forward * inputDir.z + transform.right * inputDir.x;
 
-        float moveSpeedHorizontal = 10f;
-
-        transform.position += moveHorizontalDir * moveSpeedHorizontal * Time.deltaTime;
-
-
-
         // Apply movement to camera
-
+        transform.position += moveHorizontalDir * moveSpeedHorizontal * Time.deltaTime;
 
         // ----------------------------Vertical Movement----------------------------
 
@@ -37,8 +37,6 @@ public class CameraControls : MonoBehaviour
         //Keyboard inputs
         if (Input.GetKey(KeyCode.LeftShift)) moveVerticalDir.y = -1f;
         if (Input.GetKey(KeyCode.Space)) moveVerticalDir.y = +1f;
-
-        float moveSpeedVertical = 5f;
 
         // Uses world coordinates so up is always up no matter tilt
         transform.position += moveVerticalDir * moveSpeedVertical * Time.deltaTime;
@@ -56,8 +54,6 @@ public class CameraControls : MonoBehaviour
         if (Input.GetKey(KeyCode.RightArrow)) rotateHorizontalDir = +1f;
         if (Input.GetKey(KeyCode.UpArrow)) rotateVerticalDir = -1f;
         if (Input.GetKey(KeyCode.DownArrow)) rotateVerticalDir = +1f;
-
-        float rotateSpeed = 100f;
 
         // Apply rotation to camera
         transform.eulerAngles += new Vector3(rotateVerticalDir * rotateSpeed * Time.deltaTime, rotateHorizontalDir * rotateSpeed * Time.deltaTime, 0);
