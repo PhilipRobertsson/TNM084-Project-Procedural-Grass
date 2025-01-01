@@ -169,6 +169,8 @@ MonoBehaviour:
   instanceScale: 2
   resolution: 16
   displacement: 0.1
+  type: 0
+  dimensions: 3
   seed: 0
   domain:
     translation:
@@ -180,9 +182,9 @@ MonoBehaviour:
       y: 0
       z: 0
     scale:
-      x: 8
-      y: 8
-      z: 8
+      x: 16
+      y: 16
+      z: 16
 --- !u!1 &2107507399
 GameObject:
   m_ObjectHideFlags: 0
