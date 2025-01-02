@@ -106,7 +106,7 @@ public class ProceduralSurface : MonoBehaviour {
 	[SerializeField]
 	GizmoMode gizmos;
 
-	public enum MaterialMode { Displacement, Flat, LatLonMap, CubeMap }
+	public enum MaterialMode { Displacement, Ground, GroundVariant, CubeMap }
 
 	[SerializeField]
 	MaterialMode material;

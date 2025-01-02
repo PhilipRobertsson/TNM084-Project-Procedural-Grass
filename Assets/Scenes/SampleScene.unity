@@ -166,6 +166,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshType: 1
+  noiseType: 0
+  dimensions: 1
   recalculateNormals: 0
   recalculateTangents: 0
   meshOptimization: 0
@@ -194,8 +196,8 @@ MonoBehaviour:
   material: 0
   materials:
   - {fileID: 2100000, guid: e5ca6ffc102dbab46b3df49bb2a7e145, type: 2}
-  - {fileID: 2100000, guid: 276973ae34aaea44a93437bdd01e891b, type: 2}
-  - {fileID: 2100000, guid: b6bbcc539ce2b6d4d9968fea210393c6, type: 2}
+  - {fileID: 2100000, guid: 876e35f533b479b41bef58201fd33798, type: 2}
+  - {fileID: 2100000, guid: 102e273eb96f29d4abbf3e6617be27ab, type: 2}
   - {fileID: 2100000, guid: 6522646c95a8cf34d8abcc0fda41a65e, type: 2}
 --- !u!23 &163059820
 MeshRenderer:
@@ -219,7 +221,9 @@ MeshRenderer:
   m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials: []
+  m_Materials:
+  - {fileID: 0}
+  - {fileID: 2100000, guid: c4e7a7552beb6ac4f9acac3dd297fbcb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

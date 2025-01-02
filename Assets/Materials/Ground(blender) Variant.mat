@@ -12,9 +12,11 @@ Material:
   m_Parent: {fileID: 2100000, guid: 876e35f533b479b41bef58201fd33798, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _DETAIL_MULX2
+  - _DETAIL_SCALED
+  - _NORMALMAP
   - _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _TERRAIN_INSTANCED_PERPIXEL_NORMAL
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -28,7 +30,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _EnableHeightBlend: 0
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
