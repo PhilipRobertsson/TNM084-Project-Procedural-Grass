@@ -68,13 +68,13 @@ public class ProceduralSurface : MonoBehaviour {
 	}
 
 	[SerializeField]
-	NoiseType noiseType;
+	public NoiseType noiseType;
 
 	[SerializeField, Range(1, 3)]
-	int dimensions = 1;
+	public int dimensions = 1;
 
 	[SerializeField]
-	bool recalculateNormals, recalculateTangents;
+	public bool recalculateNormals, recalculateTangents;
 
 	[System.Flags]
 	public enum MeshOptimizationMode {
@@ -85,16 +85,16 @@ public class ProceduralSurface : MonoBehaviour {
 	MeshOptimizationMode meshOptimization;
 
 	[SerializeField, Range(1, 50)]
-	int resolution = 1;
+	public int resolution = 1;
 
 	[SerializeField, Range(-1f, 1f)]
-	float displacement = 0.5f;
+	public float displacement = 0.5f;
 
 	[SerializeField]
-	Settings noiseSettings = Settings.Default;
+	public Settings noiseSettings = Settings.Default;
 
 	[SerializeField]
-	SpaceTRS domain = new SpaceTRS {
+	public SpaceTRS domain = new SpaceTRS {
 		scale = 1f
 	};
 
@@ -109,10 +109,10 @@ public class ProceduralSurface : MonoBehaviour {
 	public enum MaterialMode { Displacement, Ground, GroundVariant, CubeMap }
 
 	[SerializeField]
-	MaterialMode material;
+	public MaterialMode material;
 
 	[SerializeField]
-	Material[] materials;
+	public Material[] materials;
 
 	Mesh mesh;
 
@@ -213,7 +213,7 @@ public class ProceduralSurface : MonoBehaviour {
 		Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
 		Mesh.MeshData meshData = meshDataArray[0];
 
-		surfaceJobs[(int)noiseType, dimensions - 1](
+        surfaceJobs[(int)noiseType, dimensions - 1](
 			meshData, resolution, noiseSettings, domain, displacement,
 			meshJobs[(int)meshType](
 				mesh, meshData, resolution, default,
