@@ -38,19 +38,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BendDelta: 0
-    - _BladeBendCurve: 2.76
+    - MaxTessellationDistance: 10
+    - _BendDelta: 0.013
+    - _BladeBendCurve: 1
     - _BladeBendDistance: 0.38
-    - _BladeHeightMax: 0.41
+    - _BladeHeightMax: 0.75
     - _BladeHeightMin: 0.23
     - _BladeSegments: 3
     - _BladeWidthMax: 0.0306
     - _BladeWidthMin: 0.0165
     - _GrassFalloff: 0.085
     - _GrassThreshold: 0.318
-    - _TessellationGrassDistance: 0.01
-    - _WindFrequency: 0.049
-    - _scale: 0.61
+    - _TessellationGrassDistance: 2
+    - _WindFrequency: 0.024
+    - _scale: 0.63
     m_Colors:
     - _BaseColor: {r: 0.08575478, g: 0.15723258, b: 0.03016094, a: 1}
     - _TipColor: {r: 0.30588236, g: 0.5176471, b: 0.13333334, a: 1}

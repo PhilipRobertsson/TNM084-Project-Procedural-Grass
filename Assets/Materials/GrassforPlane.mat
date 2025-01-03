@@ -66,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GrassMap:
-        m_Texture: {fileID: 2800000, guid: 1100e6cd4ed85144086dea6125c3d43a, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 0.3, y: 0.3}
         m_Offset: {x: 2.25, y: 0}
     - _MainTex:
@@ -107,6 +107,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - MaxTessellationDistance: 200
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
@@ -146,7 +147,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TessellationGrassDistance: 0.11
+    - _TessellationGrassDistance: 0.37
     - _WindFrequency: 0.01
     - _WorkflowMode: 1
     - _ZWrite: 1

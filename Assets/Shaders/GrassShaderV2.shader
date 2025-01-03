@@ -19,6 +19,7 @@ Shader "Custom/GrassShaderV2"
 		_BendDelta("Bend Variation", Range(0, 1)) = 0.2
 
 		_TessellationGrassDistance("Tessellation Grass Distance", Range(0.001, 2)) = 0.1
+		_MaxTessellationDistance("Max Grass Render Distance", Range(0.01, 0.5)) = 0.08
 
 		_GrassMap("Grass Visibility Map", 2D) = "white" {}
 		_GrassThreshold("Grass Visibility Threshold", Range(-0.1, 1)) = 0.5
@@ -78,6 +79,7 @@ Shader "Custom/GrassShaderV2"
 				float _scale;
 
 				float _TessellationGrassDistance;
+				float _MaxTessellationDistance;
 				
 				sampler2D _GrassMap;
 				float4 _GrassMap_ST;
@@ -90,6 +92,7 @@ Shader "Custom/GrassShaderV2"
 				float  _WindFrequency;
 
 				float4 _ShadowColor;
+
 			CBUFFER_END
 
 			// VertexInput is used to pass data from the CPU to the GPU
@@ -122,6 +125,8 @@ Shader "Custom/GrassShaderV2"
 				float edge[3] : SV_TessFactor;
 				float inside  : SV_InsideTessFactor;
 			};
+
+
 
 
 			// Simple noise function, from http://answers.unity.com/answers/624136/view.html
@@ -198,8 +203,18 @@ Shader "Custom/GrassShaderV2"
 				float3 v0 = vert0.vertex.xyz;
 				float3 v1 = vert1.vertex.xyz;
 				float edgeLength = distance(v0, v1);
+				
+
+				//Dynamic Tessellation based on distance from camera
+				float3 midpoint = (v0 + v1) * 0.5;
+				midpoint = TransformObjectToWorld(midpoint);
+				float distanceToCamera = distance(midpoint, _WorldSpaceCameraPos.xyz);
+				//float distanceFactor = saturate(1.0 - (distanceToCamera / _MaxTessellationDistance));
+				float distanceFactor = clamp(distanceToCamera, 0.01, 1000.0);
+				distanceFactor = 1.5 - distanceFactor * _MaxTessellationDistance;
+				
 				//_TessellationGrassDistance makes it independent of the scale of the object
-				return (edgeLength / _TessellationGrassDistance);
+				return (edgeLength  / (_TessellationGrassDistance) * distanceFactor);
 			}
 
 

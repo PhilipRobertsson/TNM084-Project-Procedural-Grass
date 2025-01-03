@@ -15,7 +15,7 @@ Material:
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 1
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
@@ -34,27 +34,29 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _WindMap:
         m_Texture: {fileID: 2800000, guid: 0be064912be54c34c9b1ab8a8de7e507, type: 3}
-        m_Scale: {x: 0.1, y: 0.1}
+        m_Scale: {x: 0.06, y: 0.06}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - MaxTessellationDistance: 87.73
     - _BendDelta: 0
     - _BladeBendCurve: 2.76
     - _BladeBendDistance: 0.38
-    - _BladeHeightMax: 0.41
-    - _BladeHeightMin: 0.41
+    - _BladeHeightMax: 2
+    - _BladeHeightMin: 1.45
     - _BladeSegments: 3
-    - _BladeWidthMax: 0.0138
-    - _BladeWidthMin: 0.014
-    - _GrassFalloff: 0.085
-    - _GrassThreshold: 0.318
-    - _TessellationGrassDistance: 0.0015
-    - _WindFrequency: 0.049
-    - _scale: 0.17
+    - _BladeWidthMax: 0.0505
+    - _BladeWidthMin: 0.0453
+    - _GrassFalloff: 0.404
+    - _GrassThreshold: -0.1
+    - _MaxTessellationDistance: 0.035
+    - _TessellationGrassDistance: 0.02
+    - _WindFrequency: 0.058
+    - _scale: 0.3
     m_Colors:
-    - _BaseColor: {r: 0.20125782, g: 0.17014492, b: 0, a: 1}
-    - _TipColor: {r: 0.49056602, g: 0.4894987, b: 0, a: 1}
-    - _WindVelocity: {r: 0.2, g: 0, b: 0, a: 0}
+    - _BaseColor: {r: 0.5345911, g: 0.3622325, b: 0, a: 1}
+    - _TipColor: {r: 0.8238993, g: 0.73852944, b: 0.06477179, a: 1}
+    - _WindVelocity: {r: 0.3, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2492295035358369746
