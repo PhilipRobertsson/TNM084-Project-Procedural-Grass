@@ -129,9 +129,15 @@ Shader "Custom/GrassShaderV2"
 
 
 
-			// Simple noise function, from http://answers.unity.com/answers/624136/view.html
-            // We should probably change this to one made by Stegu eller iaf keijiro
-            //should be between 0 and 1
+			// Simple noise function, derived from https://github.com/patriciogonzalezvivo/lygia/blob/main/generative/srandom.glsl
+            /*
+			contributors: Patricio Gonzalez Vivo
+			description: Signed Random
+			use: srandomX(<vec2|vec3> x)
+			license:
+				- Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
+				- Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
+			*/
 			float rand(float3 co)
 			{
 				return frac(sin(dot(co.xyz, float3(12.9898, 78.233, 53.539))) * 43758.5453);
