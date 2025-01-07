@@ -368,7 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 553801f725eee3c4fb8610d6d1cf35c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldSize: 15
+  worldSize: 20
   chunkDimensions: 2
   chunkResolution: 9
   chunkDisplacement: 0.08

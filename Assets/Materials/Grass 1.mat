@@ -49,7 +49,8 @@ Material:
     - _BladeWidthMin: 0.0165
     - _GrassFalloff: 0.085
     - _GrassThreshold: 0.318
-    - _TessellationGrassDistance: 2
+    - _MaxTessellationDistance: 0.065
+    - _TessellationGrassDistance: 1
     - _WindFrequency: 0.024
     - _scale: 0.63
     m_Colors:
